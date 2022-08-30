@@ -25,6 +25,7 @@ def dark(envert):
 	menubar.config(background='#333333')
 	list_box.config(bg='#333333',fg='#F0F0F0',bd=0)
 	btn.config(image=Photo2,bd=0,activebackground='#333333')
+	btn3.config(image=Photo4,bd=0,activebackground='#333333')
 
 def light(envert):
 	label.config(image=icon)
@@ -32,6 +33,7 @@ def light(envert):
 	menubar.config(background='#F0F0F0')
 	list_box.config(bg='#F0F0F0',fg='#333333',bd=0)
 	btn.config(image=Photo,bd=0,activebackground='#F0F0F0')
+	btn3.config(image=Photo3,bd=0,activebackground='#F0F0F0')
 
 
 def Help():
@@ -68,6 +70,23 @@ def new():
 	btn2.pack(pady=5)
 	root.mainloop()
 
+def remove():
+	def delete():
+		con = sqlite3.connect('TODO.db')
+		cur = con.cursor()
+		cur.execute(f"DELETE FROM TODO WHERE id == {int(e3.get())}")
+		con.commit()
+		messagebox.showinfo('Delete','Delete Successfully!')
+		Toplevel.destroy()
+
+	Toplevel = Tk()
+	Toplevel.title('Delete ToDo')
+	lbl3 = Label(Toplevel,text='ENTER ID',font=('arial',15))
+	lbl3.pack()
+	e3 = Entry(Toplevel,font=('arial',15))
+	e3.pack()
+	ttk.Button(Toplevel,text='Delete',command=delete).pack()
+	Toplevel.mainloop()
 
 window = Tk()
 window.title('Todo')
@@ -80,6 +99,9 @@ icon1 = PhotoImage(file='3.png')
 
 Photo = PhotoImage(file='add.png')
 Photo2 = PhotoImage(file='add_dark.png')
+Photo3 = PhotoImage(file='remove.png')
+Photo4 = PhotoImage(file='remove-dark.png')
+
 
 window.iconphoto(True,icon)
 
@@ -88,6 +110,9 @@ label.pack()
 
 btn = Button(window,image=Photo,command=new,bd=0)
 btn.place(x=0,y=90)
+
+btn3 = Button(window,image=Photo3,bd=0,command=remove)
+btn3.place(x=370,y=100)
 #-----------------------Menu------------------------
 menubar = Menu(window,bg='#000000')
 
@@ -104,7 +129,7 @@ list_box = Listbox(window,width=50,height=30,bg='#F0F0F0',fg='black',font=('aria
 list_box.pack()
 
 for i in cur.fetchall():
-        list_box.insert(i[0],f'{i[0]}                     {i[1]}')
+        list_box.insert(i[0],f'{i[0]}                              {i[1]}')
 #----------------------------------------------------
 #-------------color-------------------
 window.bind('<F1>',dark)
